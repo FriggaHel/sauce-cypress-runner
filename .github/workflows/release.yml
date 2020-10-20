@@ -17,12 +17,9 @@ jobs:
           echo ::set-output name=version::${VERSION}
       - name: Check if release exists
         id: check_release
-        run: |
-          curl --fail https://api.github.com/repos/FriggaHel/sauce-cypress-runner/releases/tags/${{ steps.prep.outputs.version }}
-          echo ::set-output name=success::${?}
-          exit 0
+        run: echo ::set-output name=success::$(curl -s -o /dev/null -w "%{http_code}" https://api.github.com/repos/saucelabs/sauce-cypress-runner/releases/tags/${{ steps.prep.outputs.version }})
       - name: Create Release
-        if: steps.check_release.outputs.success != 0
+        if: steps.check_release.outputs.success != '200'
         id: create_release
         uses: actions/create-release@v1
         env:
