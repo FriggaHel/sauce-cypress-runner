@@ -17,10 +17,10 @@ jobs:
           echo ::set-output name=version::${VERSION}
       - name: Check if release exists
         id: check_release
-        shell: bash
         run: |
           curl --fail https://api.github.com/repos/FriggaHel/sauce-cypress-runner/releases/tags/${{ steps.prep.outputs.version }}
           echo ::set-output name=success::${?}
+          exit 0
       - name: Create Release
         if: steps.check_release.outputs.success != 0
         id: create_release
